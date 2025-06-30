@@ -1,12 +1,6 @@
 <<<<<<< HEAD
 # 🩺 Sistema de Historia Clínica Personal
 
-Este sistema permite registrar, consultar y monitorear la historia clínica de pacientes, integrando trazabilidad de eventos clínicos mediante simulación blockchain y sensores IoT para variables como presión arterial y ritmo cardíaco.
-
----
-
-# Historia Clínica Personal
-
 Este proyecto implementa un sistema web responsivo para la gestión de historias clínicas de pacientes crónicos, con autenticación segura, simulación de trazabilidad en blockchain y panel de monitoreo IoT.
 
 ## Tecnologías utilizadas
