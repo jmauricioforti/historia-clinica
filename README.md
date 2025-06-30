@@ -42,7 +42,7 @@ raíz/
 │   ├── login.html           # Pantalla de autenticación
 │   ├── script.js            # Lógica cliente e IoT
 │   └── style.css            # Estilos visuales
-└── README.md
+└── README.md 
 
 🛠 Instalación y ejecución paso a paso (Windows)
 
