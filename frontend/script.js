@@ -4,23 +4,20 @@ const formDiagnostico = document.getElementById("form-diagnostico");
 const eventos = document.getElementById("eventos");
 const rangoSelect = document.getElementById("rangoSelect");
 
-const datosIoTPorPaciente = {}; // Simulación por paciente
+const datosIoTPorPaciente = {};
 let hora = 0;
-let rangoActual = 60 * 12; // 12 horas por defecto (720 minutos)
+let rangoActual = 60 * 12;
 
 function generarBufferInicial(paciente) {
   const datos = { ritmo: [], presion: [] };
-
   let ritmo = 75 + Math.random() * 10;
   let presion = 125 + Math.random() * 10;
 
   for (let i = 0; i < 1440; i++) {
     ritmo += (Math.random() - 0.5) * 2;
     presion += (Math.random() - 0.5) * 2;
-
     ritmo = Math.min(Math.max(ritmo, 65), 100);
     presion = Math.min(Math.max(presion, 110), 140);
-
     datos.ritmo.push(Math.round(ritmo));
     datos.presion.push(Math.round(presion));
   }
@@ -162,10 +159,10 @@ function simularIoT() {
   datos.ritmo.push(ritmo);
   datos.presion.push(presion);
 
-  if (ritmo > 100) agregarEvento(`⚠️ Ritmo cardíaco elevado: ${ritmo} bpm`);
-  if (ritmo < 50) agregarEvento(`⚠️ Ritmo cardíaco bajo: ${ritmo} bpm`);
-  if (presion > 140) agregarEvento(`⚠️ Presión arterial elevada: ${presion} mmHg`);
-  if (presion < 90) agregarEvento(`⚠️ Presión arterial baja: ${presion} mmHg`);
+  if (ritmo > 100) agregarEvento(`Ritmo cardíaco elevado: ${ritmo} bpm`);
+  if (ritmo < 50) agregarEvento(`Ritmo cardíaco bajo: ${ritmo} bpm`);
+  if (presion > 140) agregarEvento(`Presión arterial elevada: ${presion} mmHg`);
+  if (presion < 90) agregarEvento(`Presión arterial baja: ${presion} mmHg`);
 
   hora++;
   actualizarGraficas();
@@ -177,7 +174,13 @@ function actualizarGraficas() {
 
   const ritmo = datosIoTPorPaciente[nombre].ritmo.slice(-rangoActual);
   const presion = datosIoTPorPaciente[nombre].presion.slice(-rangoActual);
-  const etiquetas = ritmo.map((_, i) => `${i + 1}m`);
+
+  const etiquetas = ritmo.map((_, i) => {
+    const minutos = ((hora - ritmo.length + i + 1440) % 1440);
+    const horas = Math.floor(minutos / 60).toString().padStart(2, '0');
+    const mins = (minutos % 60).toString().padStart(2, '0');
+    return `${horas}:${mins}`;
+  });
 
   fcChart.data.labels = etiquetas;
   paChart.data.labels = etiquetas;
@@ -188,12 +191,10 @@ function actualizarGraficas() {
   paChart.update();
 }
 
+// Evento crítico simulado cada 30 segundos
 setTimeout(() => {
-  const li = document.createElement("li");
-  li.classList.add("list-group-item", "text-danger");
-  li.textContent = "⚠️ Evento clínico: Presión arterial elevada detectada";
-  eventos.appendChild(li);
-}, 30000);
+  agregarEvento("Presión arterial elevada");
+}, 10000);
 
 setInterval(simularIoT, 60000);
 
@@ -209,14 +210,26 @@ rangoSelect.addEventListener("change", () => {
 
 cargarPacientes();
 
+// Función central de eventos
 function agregarEvento(texto) {
+  const nombre = pacienteSelect.options[pacienteSelect.selectedIndex]?.textContent || "Paciente desconocido";
+  const sala = Math.floor(Math.random() * 5) + 1;
+  const hora = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true });
+
+  let tipoEvento = texto || "evento no especificado";
+  if (texto.includes("Ritmo cardíaco elevado")) tipoEvento = "ritmo cardíaco elevado";
+  if (texto.includes("Ritmo cardíaco bajo")) tipoEvento = "ritmo cardíaco bajo";
+  if (texto.includes("Presión arterial elevada")) tipoEvento = "presión arterial elevada";
+  if (texto.includes("Presión arterial baja")) tipoEvento = "presión arterial baja";
+
+  const mensaje = `⚠️ Evento crítico – ${tipoEvento} – Paciente: ${nombre}, Sala: ${sala}, Hora: ${hora}`;
+
   const li = document.createElement("li");
-  li.classList.add("list-group-item", "text-warning");
-  li.textContent = `${texto} - ${new Date().toLocaleTimeString()}`;
+  li.classList.add("list-group-item", "text-danger");
+  li.textContent = mensaje;
   eventos.prepend(li);
 }
 
-// 🔗 Registro tipo blockchain
 function registrarAccesoBlockchain(accion, paciente) {
   const usuario = localStorage.getItem("usuario");
   if (!usuario || !paciente) return;
