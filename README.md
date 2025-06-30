@@ -5,115 +5,123 @@ Este sistema permite registrar, consultar y monitorear la historia clínica de p
 
 ---
 
-## 🚀 Tecnologías utilizadas
+# Historia Clínica Personal
 
-- **Backend:** Node.js + Express
-- **Base de datos:** MongoDB (local)
-- **Frontend:** HTML5 + Bootstrap 5 + Chart.js
-- **Trazabilidad:** Simulación de eventos clínicos tipo blockchain
-- **Autenticación:** Validación básica de profesionales
-- **IoT:** Simulación de datos biométricos con ondas sinusoidales
+Este proyecto implementa un sistema web responsivo para la gestión de historias clínicas de pacientes crónicos, con autenticación segura, simulación de trazabilidad en blockchain y panel de monitoreo IoT.
 
----
+## Tecnologías utilizadas
 
-## ⚙️ Requisitos
+- **Frontend**: HTML5, CSS3, JavaScript (Fetch API) para formularios y llamadas a la API.
+- **Backend**: Node.js con Express.js para exponer rutas REST.
+- **Base de datos**: MongoDB mediante Mongoose para el modelado de datos.
+- **Autenticación**: bcryptjs para el hashing de contraseñas.
+- **Monitorización IoT**: Simulación de envíos de datos fisiológicos (frecuencia cardíaca y presión arterial).
+- **Trazabilidad**: Registro de hash y timestamp en cada operación relevante (simulado off-chain).
 
-- Node.js instalado (versión recomendada: 18 o superior)
-- MongoDB Community Server instalado y ejecutándose localmente
-- Navegador moderno (Chrome, Edge, Firefox)
+## Estructura de carpetas
 
----
-
-## 📁 Estructura del proyecto
-
+```
 historia-clinica/
 ├── backend/
-│ ├── config/
-│ ├── controllers/
-│ ├── models/
-│ ├── routes/
-│ ├── app.js
-│ └── package.json
-└── frontend/
-├── index.html
-├── script.js
-└── style.css
+│   ├── config/           # Configuración de base de datos y variables de entorno
+│   ├── controllers/      # Lógica de negocio para rutas
+│   ├── models/           # Esquemas de Mongoose (Pacientes, Usuarios)
+│   ├── routes/           # Definición de endpoints de la API
+│   └── server.js         # Punto de entrada del servidor Express
+├── frontend/
+│   ├── index.html        # Formulario de login y gestión de pacientes
+│   ├── style.css         # Estilos básicos responsivos
+│   └── script.js         # Llamadas a la API y manejo de respuestas
+├── .env                  # Variables de entorno (no commiteado)
+├── estructura_directorios.txt
+└── README.md
+```
 
-yaml
-Copiar
-Editar
+## Modelos de datos
+
+### Pacientes
+
+- `nombre` (String)
+- `dni` (String)
+- `fechaNacimiento` (Date)
+- `genero` (String)
+- `direccion` (String)
+- `contacto` (String)
+- `obrasocial` (String)
+
+### Usuarios
+
+- `email` (String, único)
+- `clave` (String, hash con bcrypt)
+- `rol` (String)
+
+## Endpoints principales de la API
+
+### Autenticación
+
+**POST** `/api/login`
+
+- **Request** (JSON):
+  ```json
+  {
+    "usuario": "<email>",
+    "password": "<clave>"
+  }
+  ```
+- **Response** (JSON):
+  ```json
+  {
+    "mensaje": "Login correcto",
+    "usuario": "<email>",
+    "rol": "<rol>",
+    "token": "<token-simulado>"
+  }
+  ```
+
+### Gestión de Pacientes
+
+- **GET** `/api/pacientes`  
+  Devuelve lista de todos los pacientes.
+
+- **GET** `/api/pacientes/:id`  
+  Devuelve los datos de un paciente específico.
+
+- **POST** `/api/pacientes`  
+  Crea un nuevo registro de paciente. Body JSON con las propiedades del modelo.
+
+- **PUT** `/api/pacientes/:id`  
+  Actualiza los campos indicados de un paciente existente.
+
+- **DELETE** `/api/pacientes/:id`  
+  Elimina el registro de paciente.
+
+## Instrucciones de instalación y ejecución
+
+1. Clona este repositorio:
+   ```bash
+   git clone https://github.com/jmauricioforti/historia-clinica.git
+   ```
+2. Ingresa al directorio de backend:
+   ```bash
+   cd historia-clinica/backend
+   npm install
+   ```
+3. Crea un archivo `.env` en la raíz de `backend/` con tu cadena de conexión a MongoDB:
+   ```env
+   MONGODB_URI=<tu_cadena_mongo>
+   ```
+4. Inicia el servidor:
+   ```bash
+   npm start
+   ```
+5. Abre `frontend/index.html` en tu navegador o sirve la carpeta `frontend/` desde un servidor estático.
+
+## Uso básico
+
+1. Inserta un usuario en la colección `usuarios` con la contraseña hasheada (ver README interno o ejemplo de script).
+2. Accede al formulario de login en el frontend.
+3. Una vez autenticado, gestiona pacientes (listado, alta, edición y baja) desde la misma interfaz.
 
 ---
 
-## 🛠 Instalación y ejecución
-
-### 1. Clonar el repositorio o descomprimir el .zip
-
-```bash
-cd backend
-2. Instalar dependencias
-bash
-Copiar
-Editar
-npm install
-3. Iniciar MongoDB localmente
-Asegurate de tener el servicio corriendo:
-
-bash
-Copiar
-Editar
-mongod
-4. Iniciar el servidor backend
-bash
-Copiar
-Editar
-node app.js
-Deberías ver:
-
-arduino
-Copiar
-Editar
-MongoDB conectado
-Servidor backend escuchando en http://localhost:3000
-5. Abrir el frontend
-Abrí frontend/index.html en el navegador. Se conecta al backend automáticamente.
-
-Usuario de prueba (autenticación)
-Simulado con colección usuarios:
-
-json
-Copiar
-Editar
-{
-  "email": "profe@demo.com",
-  "clave": "123456",
-  "rol": "profesional"
-}
- Funcionalidades implementadas
-Registro de pacientes
-Diagnósticos con estructura completa
-
-Carga de estudios clínicos
-
-Trazabilidad de eventos (tipo blockchain)
-
-Simulación de ritmo cardíaco y presión arterial
-
-Evento clínico crítico simulado a los 30 segundos
-
-Interfaz responsive y usable
-
-Separación por módulos (MVC completo)
-
-Pendientes para integración real
-Autenticación con tokens JWT
-
-Almacenamiento real de archivos de estudios
-
-Firma digital o blockchain real con Ethereum/Web3
-
-Licencia
-Proyecto académico desarrollado para la Universidad Siglo 21 – Trabajo Final de Licenciatura en Informática.
-=======
-# historia-clinica
->>>>>>> 58bf97e08f35918ebdedb915d8a695337035e3e3
+*Este README ha sido actualizado para reflejar la estructura y el comportamiento reales del sistema según el código actual.*
