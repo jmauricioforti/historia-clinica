@@ -1,0 +1,40 @@
+body {
+  background-color: #f7fdf8;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.card-header {
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.card {
+  border-radius: 0.6rem;
+}
+
+.btn-outline-success {
+  border-radius: 0.5rem;
+  font-weight: 500;
+}
+
+#pacienteCard {
+  border: 2px dashed #198754;
+  background-color: #e9f7ed;
+}
+
+canvas {
+  background-color: #ffffff;
+  border: 1px solid #dee2e6;
+  border-radius: 0.5rem;
+  padding: 5px;
+}
+
+.list-group-item {
+  font-size: 0.95rem;
+}
+
+.list-group-item.text-danger {
+  background-color: #ffe5e5;
+  border-left: 4px solid red;
+  font-weight: bold;
+}
